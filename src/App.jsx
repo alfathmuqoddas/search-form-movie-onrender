@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Layout from './assets/Layout';
+import Layout from './components/Layout';
 import './App.css';
 import FavoriteComponent from './components/FavoriteComponent';
 import MovieCard from './components/MovieCard';

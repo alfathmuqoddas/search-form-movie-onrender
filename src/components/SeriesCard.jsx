@@ -1,4 +1,4 @@
-import Card from '../assets/Card';
+import Card from './Card';
 
 export default function SeriesCard({ seriesData }) {
   return (
