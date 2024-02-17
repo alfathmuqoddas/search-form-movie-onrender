@@ -88,7 +88,7 @@ function App() {
       </div>
       {loading ? (
         <p className="text-center">Loading...</p>
-      ) : (
+      ) : query.length > 1 ? (
         <div className="mx-auto">
           <button
             className="btn btn-primary btn-small my-4"
@@ -102,7 +102,7 @@ function App() {
             <SeriesCard seriesData={seriesData} />
           )}
         </div>
-      )}
+      ) : <>Please search for movies/series using the form above</>}
     </Layout>
   );
 }
