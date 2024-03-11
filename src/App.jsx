@@ -1,56 +1,42 @@
-import { useState, useEffect } from 'react';
-import Layout from './components/Layout';
-import './App.css';
-import FavoriteComponent from './components/FavoriteComponent';
-import MovieCard from './components/MovieCard';
-import SeriesCard from './components/SeriesCard';
+import { useState, useEffect } from "react";
+import Layout from "./components/Layout";
+import "./App.css";
+import FavoriteComponent from "./components/FavoriteComponent";
+import MovieCard from "./components/MovieCard";
+import SeriesCard from "./components/SeriesCard";
 
 function App() {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [data, setData] = useState([]);
   const [seriesData, setSeriesData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [toggleMovie, setToggleMovie] = useState(true);
 
-  const searchMovie = async () => {
+  const fetchData = async (url, setter) => {
     try {
       setLoading(true);
-      const res = await fetch(
-        `https://api.themoviedb.org/3/search/movie?api_key=403829fffc80d8184aa974d631a475c5&language=en-US&query=${query}&page=1&include_adult=false`
-      );
+      const res = await fetch(url);
       const data = await res.json();
-      const searchData = await data.results;
-      setData(searchData);
-      console.log(data);
+      setter(data.results);
     } catch (error) {
-      alert('Error while loading data. Try again later.');
+      alert("Error while loading data. Try again later.");
     } finally {
       setLoading(false);
     }
   };
 
-  const searchSeries = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch(
-        `https://api.themoviedb.org/3/search/tv?api_key=403829fffc80d8184aa974d631a475c5&language=en-US&query=${query}&page=1&include_adult=false`
-      );
-      const data = await res.json();
-      const searchData = await data.results;
-      setSeriesData(searchData);
-      console.log(seriesData);
-    } catch (error) {
-      alert('Error while loading data. Try again later.');
-    } finally {
-      setLoading(false);
-    }
+  const searchMedia = () => {
+    const movieUrl = `https://api.themoviedb.org/3/search/movie?api_key=403829fffc80d8184aa974d631a475c5&language=en-US&query=${query}&page=1&include_adult=false`;
+    const seriesUrl = `https://api.themoviedb.org/3/search/tv?api_key=403829fffc80d8184aa974d631a475c5&language=en-US&query=${query}&page=1&include_adult=false`;
+
+    fetchData(movieUrl, setData);
+    fetchData(seriesUrl, setSeriesData);
   };
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       if (query) {
-        searchSeries();
-        searchMovie();
+        searchMedia();
       }
     }, 500); // Adjust the delay based on your requirements
 
@@ -66,11 +52,11 @@ function App() {
     setToggleMovie(!toggleMovie);
   };
 
-  document.title = 'React Movie App';
+  document.title = "React Movie App";
 
   return (
     <Layout>
-      <form className="mx-auto mb-4" style={{ width: '18rem' }}>
+      <form className="mx-auto mb-4" style={{ width: "18rem" }}>
         <input
           className="form-control"
           type="text"
@@ -94,7 +80,7 @@ function App() {
             className="btn btn-primary btn-small my-4"
             onClick={toggleViewMovie}
           >
-            {toggleMovie ? 'Toggle TV results' : 'Toggle movie results'}
+            {toggleMovie ? "Toggle TV results" : "Toggle movie results"}
           </button>
           {toggleMovie ? (
             <MovieCard movieData={data} />
@@ -102,7 +88,9 @@ function App() {
             <SeriesCard seriesData={seriesData} />
           )}
         </div>
-      ) : <>Please search for movies/series using the form above</>}
+      ) : (
+        <>Please search for movies/series using the form above</>
+      )}
     </Layout>
   );
 }
